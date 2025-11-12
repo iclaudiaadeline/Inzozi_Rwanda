@@ -94,6 +94,9 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <img src="/inzozi-logo.png" alt="INZOZI Logo" className="h-12 w-12 object-contain" />
+          </div>
           <CardTitle className="text-3xl font-bold text-primary">INZOZI</CardTitle>
           <CardDescription>
             Welcome to Rwanda's Education Support Platform

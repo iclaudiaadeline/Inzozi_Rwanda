@@ -42,6 +42,26 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Navigation Header */}
+      <header className="bg-white border-b sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/inzozi-logo.png" alt="INZOZI Logo" className="h-10 w-10 object-contain" />
+            <Link to="/" className="text-2xl font-bold text-primary hover:opacity-80 transition">
+              INZOZI
+            </Link>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link to="/about">
+              <Button variant="ghost">About</Button>
+            </Link>
+            <Link to="/auth">
+              <Button>Login</Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 z-10" />

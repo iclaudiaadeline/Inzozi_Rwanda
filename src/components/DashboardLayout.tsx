@@ -63,7 +63,8 @@ const DashboardLayout = ({ children, title, icon, navigation }: DashboardLayoutP
               </Sheet>
             )}
             
-            {icon && <div className="text-primary">{icon}</div>}
+            {/* Logo Image */}
+            <img src="/inzozi-logo.png" alt="INZOZI Logo" className="h-10 w-10 object-contain" />
             <div>
               <h1 className="text-2xl font-bold text-primary">INZOZI</h1>
               <p className="text-sm text-muted-foreground">{title}</p>

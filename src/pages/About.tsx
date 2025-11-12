@@ -32,7 +32,8 @@ const About = () => {
       {/* Header */}
       <header className="py-6 border-b">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <Link to="/">
+          <Link to="/" className="flex items-center gap-3">
+            <img src="/inzozi-logo.png" alt="INZOZI Logo" className="h-10 w-10 object-contain" />
             <h1 className="text-2xl font-bold text-primary">INZOZI</h1>
           </Link>
           <Link to="/auth">
