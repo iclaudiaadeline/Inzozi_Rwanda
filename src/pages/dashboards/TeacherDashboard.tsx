@@ -251,17 +251,12 @@ const TeacherDashboard = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="rating">Performance Rating</Label>
-                  <Select value={performanceRating} onValueChange={setPerformanceRating}>
-                    <SelectTrigger id="rating">
-                      <SelectValue placeholder="Select rating" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="excellent">Excellent</SelectItem>
-                      <SelectItem value="very-good">Very Good</SelectItem>
-                      <SelectItem value="good">Good</SelectItem>
-                      <SelectItem value="needs-improvement">Needs Improvement</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="rating"
+                    placeholder="e.g., Excellent, Very Good, Good, Needs Improvement"
+                    value={performanceRating}
+                    onChange={(e) => setPerformanceRating(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">

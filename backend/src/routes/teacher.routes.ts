@@ -64,7 +64,7 @@ router.get('/profile', async (req, res) => {
 // Submit student feedback
 const feedbackSchema = z.object({
   studentName: z.string().min(1),
-  performance: z.enum(['Excellent', 'Very Good', 'Good', 'Needs Improvement']),
+  performance: z.string().min(1, 'Performance rating is required'),
   feedback: z.string().min(10),
 });
 
