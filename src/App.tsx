@@ -3,20 +3,14 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PWAInstaller from "./components/PWAInstaller";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import About from "./pages/About";
+import StudentDashboard from "./pages/dashboards/StudentDashboard";
+import TeacherDashboard from "./pages/dashboards/TeacherDashboard";
+import AdminDashboard from "./pages/dashboards/AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
-import AdminAuth from "./pages/AdminAuth";
-import AdminDashboard from "./pages/AdminDashboard";
-import CreateExam from "./pages/CreateExam";
-import EditExam from "./pages/EditExam";
-import ManageExams from "./pages/ManageExams";
-import ExamSessions from "./pages/ExamSessions";
-import Submissions from "./pages/Submissions";
-import CandidateRegister from "./pages/CandidateRegister";
-import CandidateExam from "./pages/CandidateExam";
-import CandidateExamComplete from "./pages/CandidateExamComplete";
-import SessionReview from "./pages/SessionReview";
 
 const queryClient = new QueryClient();
 
@@ -25,26 +19,35 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <PWAInstaller />
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/admin/auth" element={<AdminAuth />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/create-exam" element={<CreateExam />} />
-          <Route path="/admin/exam/:examId/edit" element={<EditExam />} />
-          <Route path="/admin/manage-exams" element={<ManageExams />} />
-          <Route path="/admin/exam/:examId/sessions" element={<ExamSessions />} />
-          <Route path="/admin/submissions" element={<Submissions />} />
-          <Route path="/admin/session/:sessionId/review" element={<SessionReview />} />
-          <Route path="/candidate/register" element={<CandidateRegister />} />
-          <Route path="/candidate/exam/:sessionId" element={<CandidateExam />} />
-          <Route path="/candidate/exam-complete" element={<CandidateExamComplete />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/about" element={<About />} />
+          <Route 
+            path="/dashboard/student" 
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <StudentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/teacher" 
+            element={
+              <ProtectedRoute allowedRoles={["teacher"]}>
+                <TeacherDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/admin" 
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
