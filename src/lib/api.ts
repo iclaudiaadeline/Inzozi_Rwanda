@@ -38,19 +38,28 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${this.token}`;
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({
-        error: 'An error occurred',
-      }));
-      throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({
+          error: 'An error occurred',
+        }));
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      // Log detailed error information for debugging
+      console.error(`API Error at ${url}:`, error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Failed to fetch: Network error or CORS issue');
     }
-
-    return response.json();
   }
 
   // Auth endpoints

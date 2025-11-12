@@ -1,6 +1,7 @@
 import express from 'express';
-import prisma from '../lib/prisma.js';
+import db from '../lib/db.js';
 import { hashPassword, comparePassword, generateToken } from '../utils/auth.utils.js';
+import { generateId } from '../utils/id.utils.js';
 import { authenticate } from '../middleware/auth.middleware.js';
 import { z } from 'zod';
 
@@ -26,9 +27,10 @@ router.post('/signup', async (req, res) => {
     const { name, email, password, role } = validatedData;
 
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
-    });
+    const existingUser = await db.get(
+      'SELECT * FROM User WHERE email = ?',
+      [email]
+    );
 
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists' });
@@ -38,46 +40,38 @@ router.post('/signup', async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     // Create user
-    const created = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role,
-        ...(role === 'student' && {
-          studentProfile: {
-            create: {
-              attendance: 85,
-              performance: 'Good',
-              interests: JSON.stringify([])
-            }
-          }
-        }),
-        ...(role === 'teacher' && {
-          teacherProfile: {
-            create: {
-              points: 0,
-              level: 1
-            }
-          }
-        })
-      }
-    });
+    const userId = generateId();
+    await db.run(
+      'INSERT INTO User (id, email, name, password, role) VALUES (?, ?, ?, ?, ?)',
+      [userId, email, name, hashedPassword, role]
+    );
 
-    // Normalize user for response (hide password)
-    const user = {
-      id: created.id,
-      name: created.name,
-      email: created.email,
-      role: created.role
-    };
+    // Create user profile based on role
+    if (role === 'student') {
+      const profileId = generateId();
+      await db.run(
+        'INSERT INTO StudentProfile (id, userId, attendance, performance, interests) VALUES (?, ?, ?, ?, ?)',
+        [profileId, userId, 85, 'Good', JSON.stringify([])]
+      );
+    } else if (role === 'teacher') {
+      const profileId = generateId();
+      await db.run(
+        'INSERT INTO TeacherProfile (id, userId, points, level) VALUES (?, ?, ?, ?)',
+        [profileId, userId, 0, 1]
+      );
+    }
 
     // Generate token
-    const token = generateToken(user.id, user.role);
+    const token = generateToken(userId, role);
 
     res.status(201).json({
       message: 'User created successfully',
-      user,
+      user: {
+        id: userId,
+        name,
+        email,
+        role
+      },
       token
     });
   } catch (error) {
@@ -96,9 +90,10 @@ router.post('/login', async (req, res) => {
     const { email, password } = validatedData;
 
     // Find user
-    const user = await prisma.user.findUnique({
-      where: { email }
-    });
+    const user = await db.get(
+      'SELECT * FROM User WHERE email = ?',
+      [email]
+    );
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
@@ -138,15 +133,10 @@ router.get('/me', authenticate, async (req, res) => {
   try {
     const userId = (req as any).userId;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true
-      }
-    });
+    const user = await db.get(
+      'SELECT id, name, email, role FROM User WHERE id = ?',
+      [userId]
+    );
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });

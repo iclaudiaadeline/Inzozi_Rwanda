@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes.js';
 import studentRoutes from './routes/student.routes.js';
 import teacherRoutes from './routes/teacher.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import db from './lib/db.js';
 
 dotenv.config();
 
@@ -30,10 +31,12 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'INZOZI API is running' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📡 CORS enabled for: ${CORS_ORIGIN}`);
-});
+// Start server after a brief delay to ensure database is initialized
+setTimeout(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`📡 CORS enabled for: ${CORS_ORIGIN}`);
+  });
+}, 1000);
 
 

@@ -1,5 +1,6 @@
 import express from 'express';
-import prisma from '../lib/prisma.js';
+import db from '../lib/db.js';
+import { generateId } from '../utils/id.utils.js';
 import { authenticate, authorize } from '../middleware/auth.middleware.js';
 import { z } from 'zod';
 
@@ -26,22 +27,29 @@ router.get('/profile', async (req, res) => {
   try {
     const userId = (req as any).userId;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        studentProfile: true
-      }
-    });
+    const user = await db.get(
+      'SELECT * FROM User WHERE id = ?',
+      [userId]
+    );
 
-    if (!user || !user.studentProfile) {
+    if (!user) {
+      return res.status(404).json({ error: 'Student profile not found' });
+    }
+
+    const studentProfile = await db.get(
+      'SELECT * FROM StudentProfile WHERE userId = ?',
+      [userId]
+    );
+
+    if (!studentProfile) {
       return res.status(404).json({ error: 'Student profile not found' });
     }
 
     // Parse interests string to array for response compatibility
     const profile = {
-      ...user.studentProfile,
-      interests: safeParseArray(user.studentProfile.interests)
-    } as any;
+      ...studentProfile,
+      interests: safeParseArray(studentProfile.interests)
+    };
 
     res.json({
       user: {
@@ -68,36 +76,34 @@ router.post('/quiz', async (req, res) => {
     const validatedData = quizResultSchema.parse(req.body);
     const { interests } = validatedData;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { studentProfile: true }
-    });
+    const studentProfile = await db.get(
+      'SELECT * FROM StudentProfile WHERE userId = ?',
+      [userId]
+    );
 
-    if (!user || !user.studentProfile) {
+    if (!studentProfile) {
       return res.status(404).json({ error: 'Student profile not found' });
     }
 
     // Save quiz result (store as string)
-    const quizResult = await prisma.quizResult.create({
-      data: {
-        studentId: user.studentProfile.id,
-        interests: JSON.stringify(interests)
-      }
-    });
+    const quizResultId = generateId();
+    await db.run(
+      'INSERT INTO QuizResult (id, studentId, interests) VALUES (?, ?, ?)',
+      [quizResultId, studentProfile.id, JSON.stringify(interests)]
+    );
 
     // Update student profile with interests (store as string)
-    await prisma.studentProfile.update({
-      where: { id: user.studentProfile.id },
-      data: {
-        interests: JSON.stringify(interests)
-      }
-    });
+    await db.run(
+      'UPDATE StudentProfile SET interests = ? WHERE id = ?',
+      [JSON.stringify(interests), studentProfile.id]
+    );
 
     res.json({
       message: 'Quiz results saved successfully',
       quizResult: {
-        ...quizResult,
-        interests // echo array back to client
+        id: quizResultId,
+        studentId: studentProfile.id,
+        interests
       }
     });
   } catch (error) {
@@ -114,31 +120,23 @@ router.get('/quiz/results', async (req, res) => {
   try {
     const userId = (req as any).userId;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        studentProfile: {
-          include: {
-            quizResults: {
-              orderBy: {
-                completedAt: 'desc'
-              },
-              take: 1
-            }
-          }
-        }
-      }
-    });
+    const studentProfile = await db.get(
+      'SELECT * FROM StudentProfile WHERE userId = ?',
+      [userId]
+    );
 
-    if (!user || !user.studentProfile) {
+    if (!studentProfile) {
       return res.status(404).json({ error: 'Student profile not found' });
     }
 
-    const latest = user.studentProfile.quizResults[0] || null;
+    const latest = await db.get(
+      'SELECT * FROM QuizResult WHERE studentId = ? ORDER BY completedAt DESC LIMIT 1',
+      [studentProfile.id]
+    );
 
     res.json({
-      interests: safeParseArray(user.studentProfile.interests),
-      latestResult: latest ? { ...latest, interests: safeParseArray((latest as any).interests) } : null
+      interests: safeParseArray(studentProfile.interests),
+      latestResult: latest ? { ...latest, interests: safeParseArray(latest.interests) } : null
     });
   } catch (error) {
     console.error('Get quiz results error:', error);
