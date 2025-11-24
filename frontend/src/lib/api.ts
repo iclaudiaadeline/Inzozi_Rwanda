@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 export interface ApiResponse<T> {
   data?: T;
@@ -8,10 +9,12 @@ export interface ApiResponse<T> {
 
 class ApiClient {
   private baseUrl: string;
+  private backendUrl: string;
   private token: string | null = null;
 
-  constructor(baseUrl: string) {
+  constructor(baseUrl: string, backendUrl: string, token: string | null = null) {
     this.baseUrl = baseUrl;
+    this.backendUrl = backendUrl;
     this.token = localStorage.getItem('inzozi_token') || null;
   }
 
@@ -28,7 +31,7 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    const url = `${this.backendUrl}${endpoint}`;
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
       ...options.headers,
@@ -73,7 +76,7 @@ class ApiClient {
       user: { id: string; name: string; email: string; role: string };
       token: string;
       message: string;
-    }>('/auth/signup', {
+    }>('/signup', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -86,7 +89,7 @@ class ApiClient {
       user: { id: string; name: string; email: string; role: string };
       token: string;
       message: string;
-    }>('/auth/login', {
+    }>('/login', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -96,7 +99,7 @@ class ApiClient {
 
   async getCurrentUser() {
     return this.request<{ user: { id: string; name: string; email: string; role: string } }>(
-      '/auth/me'
+      '/me'
     );
   }
 
@@ -111,14 +114,14 @@ class ApiClient {
         performance: string | null;
         interests: string[];
       };
-    }>('/student/profile');
+    }>('/profile');
   }
 
   async submitQuiz(interests: string[]) {
     return this.request<{
       message: string;
       quizResult: { id: string; interests: string[] };
-    }>('/student/quiz', {
+    }>('/quiz', {
       method: 'POST',
       body: JSON.stringify({ interests }),
     });
@@ -128,7 +131,7 @@ class ApiClient {
     return this.request<{
       interests: string[];
       latestResult: { id: string; interests: string[]; completedAt: string } | null;
-    }>('/student/quiz/results');
+    }>('/quiz/results');
   }
 
   // Teacher endpoints
@@ -147,7 +150,7 @@ class ApiClient {
           feedback: string;
         }>;
       };
-    }>('/teacher/profile');
+    }>('/profile');
   }
 
   async submitFeedback(data: {
@@ -161,7 +164,7 @@ class ApiClient {
       pointsEarned: number;
       newPoints: number;
       newLevel: number;
-    }>('/teacher/feedback', {
+    }>('/feedback', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -175,7 +178,7 @@ class ApiClient {
         attendance: string;
         performance: string;
       }>;
-    }>('/teacher/students');
+    }>('/students');
   }
 
   async getStudentQuizSummaries() {
@@ -186,7 +189,7 @@ class ApiClient {
         interests: string[];
         completedAt: string;
       }>;
-    }>('/teacher/students/quiz-summaries');
+    }>('/students/quiz-summaries');
   }
 
   // Admin endpoints
@@ -197,7 +200,7 @@ class ApiClient {
       teachers: number;
       totalDonations: number;
       activeCases: number;
-    }>('/admin/stats');
+    }>('/stats');
   }
 
   async getRoleDistribution() {
@@ -205,7 +208,7 @@ class ApiClient {
       students: { count: number; percentage: string };
       teachers: { count: number; percentage: string };
       admins: { count: number; percentage: string };
-    }>('/admin/users/role-distribution');
+    }>('/users/role-distribution');
   }
 
   async getAtRiskStudents() {
@@ -217,10 +220,10 @@ class ApiClient {
         performance: string;
         severity: string;
       }>;
-    }>('/admin/students/at-risk');
+    }>('/students/at-risk');
   }
 }
 
-export const apiClient = new ApiClient(API_BASE_URL);
+export const apiClient = new ApiClient(API_BASE_URL, API_BACKEND_URL);
 
 
