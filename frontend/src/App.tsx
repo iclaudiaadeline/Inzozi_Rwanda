@@ -22,10 +22,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="https://inzozi-rwanda.onrender.com/auth" element={<Auth />} />
-          <Route path="https://inzozi-rwanda.onrender.com/about" element={<About />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/about" element={<About />} />
           <Route 
-            path="https://inzozi-rwanda.onrender.com/dashboard/student" 
+            path="/dashboard/student" 
             element={
               <ProtectedRoute allowedRoles={["student"]}>
                 <StudentDashboard />
@@ -33,7 +33,7 @@ const App = () => (
             } 
           />
           <Route 
-            path="https://inzozi-rwanda.onrender.com/dashboard/teacher" 
+            path="/dashboard/teacher" 
             element={
               <ProtectedRoute allowedRoles={["teacher"]}>
                 <TeacherDashboard />
@@ -41,7 +41,7 @@ const App = () => (
             } 
           />
           <Route 
-            path="https://inzozi-rwanda.onrender.com/dashboard/admin" 
+            path="/dashboard/admin" 
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <AdminDashboard />
