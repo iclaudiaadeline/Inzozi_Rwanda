@@ -1,26 +1,30 @@
-# Use Node image
-FROM node:18-alpine
+# Build stage
+FROM node:18-alpine AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the frontend code
 COPY . .
-
-# Build the React app
 RUN npm run build
 
-# Install serve to host the production build
-RUN npm install -g serve
+# Production stage
+FROM nginx:alpine
 
-# Expose frontend port
+# Copy built files to nginx
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Copy nginx config for React Router
+RUN echo 'server { \
+    listen 3000; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
+
 EXPOSE 3000
 
-# Serve with single-page app support (handles React Router)
-CMD ["serve", "-s", "build", "-l", "3000", "--single"]
+CMD ["nginx", "-g", "daemon off;"]
