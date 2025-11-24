@@ -1,0 +1,27 @@
+services:
+  # Backend service
+  - type: web
+    name: inzozi-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      # Add your other environment variables here
+      - key: DATABASE_URL
+        sync: false  # Set this in Render dashboard
+      - key: JWT_SECRET
+        sync: false  # Set this in Render dashboard
+    
+  # Frontend service
+  - type: web
+    name: inzozi-frontend
+    runtime: docker
+    rootDir: frontend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VITE_API_URL
+        value: https://inzozi-backend.onrender.com  # Update with your backend URL
