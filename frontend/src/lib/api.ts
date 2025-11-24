@@ -76,7 +76,7 @@ class ApiClient {
       user: { id: string; name: string; email: string; role: string };
       token: string;
       message: string;
-    }>('/signup', {
+    }>('/api/auth/signup', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -89,7 +89,7 @@ class ApiClient {
       user: { id: string; name: string; email: string; role: string };
       token: string;
       message: string;
-    }>('/login', {
+    }>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -99,7 +99,7 @@ class ApiClient {
 
   async getCurrentUser() {
     return this.request<{ user: { id: string; name: string; email: string; role: string } }>(
-      '/me'
+      '/api/auth/me'
     );
   }
 
@@ -114,14 +114,14 @@ class ApiClient {
         performance: string | null;
         interests: string[];
       };
-    }>('/profile');
+    }>('/api/student/profile');
   }
 
   async submitQuiz(interests: string[]) {
     return this.request<{
       message: string;
       quizResult: { id: string; interests: string[] };
-    }>('/quiz', {
+    }>('/api/student/quiz', {
       method: 'POST',
       body: JSON.stringify({ interests }),
     });
@@ -131,7 +131,7 @@ class ApiClient {
     return this.request<{
       interests: string[];
       latestResult: { id: string; interests: string[]; completedAt: string } | null;
-    }>('/quiz/results');
+    }>('/api/student/quiz/results');
   }
 
   // Teacher endpoints
@@ -150,7 +150,7 @@ class ApiClient {
           feedback: string;
         }>;
       };
-    }>('/profile');
+    }>('/api/teacher/profile');
   }
 
   async submitFeedback(data: {
@@ -164,7 +164,7 @@ class ApiClient {
       pointsEarned: number;
       newPoints: number;
       newLevel: number;
-    }>('/feedback', {
+    }>('/api/teacher/feedback', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -178,7 +178,7 @@ class ApiClient {
         attendance: string;
         performance: string;
       }>;
-    }>('/students');
+    }>('/api/teacher/students');
   }
 
   async getStudentQuizSummaries() {
@@ -189,7 +189,7 @@ class ApiClient {
         interests: string[];
         completedAt: string;
       }>;
-    }>('/students/quiz-summaries');
+    }>('/api/teacher/students/quiz-summaries');
   }
 
   // Admin endpoints
@@ -200,7 +200,7 @@ class ApiClient {
       teachers: number;
       totalDonations: number;
       activeCases: number;
-    }>('/stats');
+    }>('/api/admin/stats');
   }
 
   async getRoleDistribution() {
@@ -208,7 +208,7 @@ class ApiClient {
       students: { count: number; percentage: string };
       teachers: { count: number; percentage: string };
       admins: { count: number; percentage: string };
-    }>('/users/role-distribution');
+    }>('/api/admin/users/role-distribution');
   }
 
   async getAtRiskStudents() {
@@ -220,7 +220,7 @@ class ApiClient {
         performance: string;
         severity: string;
       }>;
-    }>('/students/at-risk');
+    }>('/api/admin/students/at-risk');
   }
 }
 

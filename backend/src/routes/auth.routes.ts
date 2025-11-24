@@ -78,7 +78,7 @@ router.post('/signup', async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: 'Validation error', details: error.errors });
     }
-    console.error('Signup error:', error);
+    console.error('Signup error (maybe database):', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
