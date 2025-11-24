@@ -10,14 +10,17 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the backend code
+# Copy the rest of the frontend code
 COPY . .
 
-# Build TypeScript
+# Build the React app
 RUN npm run build
 
-# Expose backend port
-EXPOSE 5000
+# Install serve to host the production build
+RUN npm install -g serve
 
-# Run the server
-CMD ["node", "dist/server.js"]
+# Expose frontend port
+EXPOSE 3000
+
+# Serve the built React app
+CMD ["serve", "-s", "build", "-l", "3000"]
