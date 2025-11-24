@@ -55,7 +55,7 @@ const Index = () => {
             <Link to="https://inzozi-rwanda.onrender.com/about">
               <Button variant="ghost">About</Button>
             </Link>
-            <Link to="https://inzozi-rwanda-1.onrender.com/auth/login">
+            <Link to="https://inzozi-rwanda.onrender.com/auth">
               <Button>Login</Button>
             </Link>
           </div>
@@ -167,7 +167,7 @@ const Index = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Join thousands of students, teachers, parents, and donors working together to improve education in Rwanda
           </p>
-          <Link to="https://inzozi-rwanda-1.onrender.com/api/auth">
+          <Link to="https://inzozi-rwanda.onrender.com/auth">
             <Button size="lg" variant="secondary" className="text-lg px-8">
               Join INZOZI Today
             </Button>
