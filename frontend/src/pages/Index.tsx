@@ -81,12 +81,12 @@ const Index = () => {
             Supporting students, teachers, parents, and communities to reduce dropout rates and improve learning outcomes
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link to="https://inzozi-rwanda-1.onrender.com/auth">
+            <Link to="https://inzozi-rwanda-1.onrender.com/api//auth">
               <Button size="lg" variant="secondary" className="text-lg px-8">
                 Get Started
               </Button>
             </Link>
-            <Link to="https://inzozi-rwanda-1.onrender.com/about">
+            <Link to="https://inzozi-rwanda-1.onrender.com/api/about">
               <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
                 Learn More
               </Button>
@@ -167,7 +167,7 @@ const Index = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Join thousands of students, teachers, parents, and donors working together to improve education in Rwanda
           </p>
-          <Link to="https://inzozi-rwanda-1.onrender.com/auth">
+          <Link to="https://inzozi-rwanda-1.onrender.com/api/auth">
             <Button size="lg" variant="secondary" className="text-lg px-8">
               Join INZOZI Today
             </Button>
