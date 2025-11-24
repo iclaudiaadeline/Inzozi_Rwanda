@@ -12,8 +12,8 @@ RUN npm run build
 # Production stage
 FROM nginx:alpine
 
-# Copy built files to nginx
-COPY --from=build /app/build /usr/share/nginx/html
+# Copy built files to nginx (changed to dist!)
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Copy nginx config for React Router
 RUN echo 'server { \
