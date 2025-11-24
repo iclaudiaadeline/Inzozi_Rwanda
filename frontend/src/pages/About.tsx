@@ -144,7 +144,7 @@ const About = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Together, we can transform education in Rwanda and create opportunities for every student to succeed.
           </p>
-          <Link to="/auth">
+          <Link to={`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`}>  
             <Button size="lg" variant="secondary">
               Get Started Today
             </Button>
