@@ -55,7 +55,7 @@ const Index = () => {
             <Link to="https://inzozi-rwanda.onrender.com/about">
               <Button variant="ghost">About</Button>
             </Link>
-            <Link to="https://inzozi-rwanda-1.onrender.com/api/auth">
+            <Link to="https://inzozi-rwanda-1.onrender.com/auth/login">
               <Button>Login</Button>
             </Link>
           </div>
