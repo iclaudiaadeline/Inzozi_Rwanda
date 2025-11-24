@@ -22,5 +22,5 @@ RUN npm install -g serve
 # Expose frontend port
 EXPOSE 3000
 
-# Serve the built React app
-CMD ["serve", "-s", "build", "-l", "3000"]
+# Serve with single-page app support (handles React Router)
+CMD ["serve", "-s", "build", "-l", "3000", "--single"]
