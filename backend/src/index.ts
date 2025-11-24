@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN = 'https://inzozi-rwanda.onrender.com/';
+const CORS_ORIGIN = 'https://inzozi-rwanda.onrender.com';
 
 // Middleware
 app.use(cors({
