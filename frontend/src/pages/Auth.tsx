@@ -42,7 +42,7 @@ const Auth = () => {
       localStorage.setItem("inzozi_user", JSON.stringify(response.user));
       
       toast.success("Login successful!");
-      navigate(`/dashboard/${response.user.role}`);
+      navigate(`https://inzozi-rwanda-1.onrender.com/dashboard/${response.user.role}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Login failed. Please try again.");
     } finally {
@@ -82,7 +82,7 @@ const Auth = () => {
       localStorage.setItem("inzozi_user", JSON.stringify(response.user));
       
       toast.success("Account created successfully!");
-      navigate(`/dashboard/${response.user.role}`);
+      navigate(`https://inzozi-rwanda-1.onrender.com/dashboard/${response.user.role}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Signup failed. Please try again.");
     } finally {

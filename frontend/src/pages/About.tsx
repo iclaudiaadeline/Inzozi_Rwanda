@@ -36,7 +36,7 @@ const About = () => {
             <img src="/inzozi-logo.png" alt="INZOZI Logo" className="h-10 w-10 object-contain" />
             <h1 className="text-2xl font-bold text-primary">INZOZI</h1>
           </Link>
-          <Link to="/auth">
+          <Link to="https://inzozi-rwanda-1.onrender.com/auth">
             <Button>Get Started</Button>
           </Link>
         </div>
