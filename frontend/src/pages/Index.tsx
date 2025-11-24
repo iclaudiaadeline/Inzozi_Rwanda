@@ -81,12 +81,12 @@ const Index = () => {
             Supporting students, teachers, parents, and communities to reduce dropout rates and improve learning outcomes
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link to="https://inzozi-rwanda-1.onrender.com/api//auth">
+            <Link to="/auth">
               <Button size="lg" variant="secondary" className="text-lg px-8">
                 Get Started
               </Button>
             </Link>
-            <Link to="https://inzozi-rwanda-1.onrender.com/api/about">
+            <Link to="/about">
               <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
                 Learn More
               </Button>
